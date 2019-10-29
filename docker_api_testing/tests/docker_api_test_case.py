@@ -20,7 +20,7 @@ class DockerAPITestCase(TestCase):
             response = api_handler.delete(endpoint, data)
 
         # Gracefully handle any connection errors
-        if response == None:
+        if response is None:
             error = 'Docker daemon was not found at ' + config.docker_socket
             self.fail(error)
         return response
