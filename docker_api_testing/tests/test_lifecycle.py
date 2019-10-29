@@ -3,16 +3,27 @@ import json
 from docker_api_testing.tests.docker_api_test_case import DockerAPITestCase
 
 def parse_logs(response):
-    """ Parse the Docker logs into just the text output"""
-    lines = response.text.split('\n')
+    """Parse the Docker logs into stdout and stderr string lists"""
+    # Parse each line into a log, skip the empty lines
+    lines = list(filter(None, response.text.split('\n')))
+    stdout_logs = []
+    stderr_logs = []
 
-    # Skip the first 8 bytes of the log stream
-    # Byte format documentation
-    # https://docs.docker.com/engine/api/v1.40/#operation/ContainerAttach
-    header_removed_output = [s[8:] for s in lines]
+    for line in lines:
+        # Byte format documentation
+        # https://docs.docker.com/engine/api/v1.40/#operation/ContainerAttach
+        log_bytes = bytes(line, 'utf8')
+        stream_type = log_bytes[0]
+        log_message = line[8:]
 
-    empty_lines_removed = list(filter(None, header_removed_output))
-    return empty_lines_removed
+        if stream_type == 0:
+            print('Warning: Received a stdin log?')
+        elif stream_type == 1:
+            stdout_logs.append(log_message)
+        elif stream_type == 2:
+            stderr_logs.append(log_message)
+
+    return [stdout_logs, stderr_logs]
 
 class LifecycleTest(DockerAPITestCase):
     container_id = None
@@ -56,7 +67,7 @@ class LifecycleTest(DockerAPITestCase):
         self.assertEqual(response.status_code, 304)
 
         # Get the stdout logs
-        expected_logs = ['hello stdout']
+        expected_logs = [['hello stdout'], []]
         endpoint = 'containers/{}/logs?stdout=true&stderr=false'.format(
                 self.container_id)
         response = self.request('get', endpoint)
@@ -64,7 +75,7 @@ class LifecycleTest(DockerAPITestCase):
         self.assertEqual(parse_logs(response), expected_logs)
 
         # Get the stderr logs
-        expected_logs = ['hello stderr']
+        expected_logs = [[], ['hello stderr']]
         endpoint = 'containers/{}/logs?stdout=false&stderr=true'.format(
                 self.container_id)
         response = self.request('get', endpoint)
@@ -72,8 +83,7 @@ class LifecycleTest(DockerAPITestCase):
         self.assertEqual(parse_logs(response), expected_logs)
 
         # Get all the logs
-        # NOTE: stderr is always output before stdout in this case?
-        expected_logs = ['hello stderr', 'hello stdout']
+        expected_logs = [['hello stdout'], ['hello stderr']]
         endpoint = 'containers/{}/logs?stdout=true&stderr=true'.format(
                 self.container_id)
         response = self.request('get', endpoint)
