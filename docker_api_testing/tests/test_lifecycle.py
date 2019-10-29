@@ -26,7 +26,7 @@ class LifecycleTest(DockerAPITestCase):
         self.assertEqual(response.status_code, 200)
 
         # Creates a container
-        endpoint = 'containers/create'.format(image_name)
+        endpoint = 'containers/create'
         data = {
             'Image': image_name,
             'Cmd': ['sh', '-c', 'echo hello stdout; >&2 echo hello stderr'],
