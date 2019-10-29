@@ -12,7 +12,7 @@ class DockerAPIHandler():
         response = None
         try:
             response = self.session.get(
-                    config.docker_socket + endpoint,
+                    config.docker_socket + config.docker_version + endpoint,
                     data=data)
         except ConnectionError as e:
             pass
@@ -23,7 +23,7 @@ class DockerAPIHandler():
         try:
             headers = {'Content-type': 'application/json'}
             response = self.session.post(
-                    config.docker_socket + endpoint,
+                    config.docker_socket + config.docker_version + endpoint,
                     data=data,
                     headers=headers,)
         except ConnectionError as e:
@@ -34,7 +34,7 @@ class DockerAPIHandler():
         response = None
         try:
             response = self.session.delete(
-                    config.docker_socket + endpoint,
+                    config.docker_socket + config.docker_version + endpoint,
                     data=data,)
         except ConnectionError as e:
             pass
