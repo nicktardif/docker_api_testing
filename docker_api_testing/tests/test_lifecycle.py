@@ -72,6 +72,7 @@ class LifecycleTest(DockerAPITestCase):
         self.assertEqual(parse_logs(response), expected_logs)
 
         # Get all the logs
+        # NOTE: stderr is always output before stdout in this case?
         expected_logs = ['hello stderr', 'hello stdout']
         endpoint = 'containers/{}/logs?stdout=true&stderr=true'.format(
                 self.container_id)
