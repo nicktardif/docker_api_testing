@@ -8,31 +8,24 @@ class DockerAPIHandler():
     def __init__(self):
         self.session = requests_unixsocket.Session()
 
-    def get(self, endpoint, data):
-        try:
-            return self.session.get(
-                    config.docker_socket + config.docker_version + endpoint,
-                    data=data)
-        except ConnectionError as e:
-            print('Error: Could not establish connection to Docker daemon')
-        return None
+    def request(self, action, endpoint, data=None):
+        """Make web request to the Docker API"""
+        possible_actions = ['get', 'post', 'delete']
+        assert(action in possible_actions)
 
-    def post(self, endpoint, data):
+        http_methods = {
+            'get': self.session.get,
+            'post': self.session.post,
+            'delete': self.session.delete,
+        }
+
+        # Attempt the web request
         try:
             headers = {'Content-type': 'application/json'}
-            return self.session.post(
+            return http_methods[action](
                     config.docker_socket + config.docker_version + endpoint,
                     data=data,
                     headers=headers,)
-        except ConnectionError as e:
-            print('Error: Could not establish connection to Docker daemon')
-        return None
-
-    def delete(self, endpoint, data):
-        try:
-            return self.session.delete(
-                    config.docker_socket + config.docker_version + endpoint,
-                    data=data,)
         except ConnectionError as e:
             print('Error: Could not establish connection to Docker daemon')
         return None

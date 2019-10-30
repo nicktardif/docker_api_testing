@@ -11,13 +11,7 @@ class DockerAPITestCase(TestCase):
 
         # Make the request
         api_handler = DockerAPIHandler()
-        response = None
-        if action == 'get':
-            response = api_handler.get(endpoint, data)
-        if action == 'post':
-            response = api_handler.post(endpoint, data)
-        if action == 'delete':
-            response = api_handler.delete(endpoint, data)
+        response = api_handler.request(action, endpoint, data)
 
         # Gracefully handle any connection errors
         if response is None:
