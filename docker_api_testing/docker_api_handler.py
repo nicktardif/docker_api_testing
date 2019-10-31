@@ -20,12 +20,8 @@ class DockerAPIHandler():
         }
 
         # Attempt the web request
-        try:
-            headers = {'Content-type': 'application/json'}
-            return http_methods[action](
-                    config.docker_socket + config.docker_version + endpoint,
-                    data=data,
-                    headers=headers,)
-        except ConnectionError as e:
-            print('Error: Could not establish connection to Docker daemon')
-        return None
+        headers = {'Content-type': 'application/json'}
+        return http_methods[action](
+                config.docker_socket + config.docker_version + endpoint,
+                data=data,
+                headers=headers,)
