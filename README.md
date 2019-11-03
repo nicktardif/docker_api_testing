@@ -5,7 +5,7 @@ This Python project tests parts of the Docker Container API, specifically the St
 * Ubuntu 18.04 OS
 * Docker 18.09.7+
     * Installation instructions [here](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
-* This testing suite was built with the Docker API 1.40 documentation [link](https://docs.docker.com/engine/api/v1.40/)
+* This testing suite was built with the Docker API 1.40 documentation - [link](https://docs.docker.com/engine/api/v1.40/)
 
 ### Pipenv
 Pipenv is what we use to manage our Python dependencies. You can choose to install this in user space or globally on your system.
