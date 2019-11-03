@@ -23,3 +23,9 @@ class StartContainerTest(DockerAPITestCase):
         endpoint = 'containers/{}/start'.format(container_id)
         response = self.request('post', endpoint)
         self.assertEqual(response.status_code, 404)
+
+'''
+Additional tests that we could add in the future:
+* Set detachKeys parameter and check if we can detach from an interactive
+  terminal using a different command sequence
+'''

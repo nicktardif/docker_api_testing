@@ -31,3 +31,9 @@ class StopContainerTest(DockerAPITestCase):
         endpoint = 'containers/{}/stop'.format(container_id)
         response = self.request('post', endpoint)
         self.assertEqual(response.status_code, 404)
+
+'''
+Additional tests that we could add in the future:
+* Set the t parameter, and check before and after t seconds later to check if
+  the container was stopped after a specific delay time
+'''
