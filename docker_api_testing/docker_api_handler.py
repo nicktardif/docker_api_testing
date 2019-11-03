@@ -11,7 +11,10 @@ class DockerAPIHandler():
     def request(self, action, endpoint, data=None):
         """Make web request to the Docker API"""
         possible_actions = ['get', 'post', 'delete']
-        assert(action in possible_actions)
+        if action not in possible_actions:
+            raise ValueError('action "{}" not valid. Options: {}'.format(
+                action,
+                ' '.join(possible_actions)))
 
         http_methods = {
             'get': self.session.get,
