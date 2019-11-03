@@ -5,8 +5,6 @@ from docker_api_testing.docker_api_handler import DockerAPIHandler
 from docker_api_testing import config
 
 class DockerAPITestCase(TestCase):
-    container_id = None
-
     def setUp(self):
         """Pulls a small image and creates a container"""
         # Pulls an image (alpine is a nice small image)
@@ -23,6 +21,8 @@ class DockerAPITestCase(TestCase):
         }
         response = self.request('post', endpoint, data=json.dumps(data))
         self.assertEqual(response.status_code, 201)
+
+        # Set the container ID so we can use it in tests
         self.container_id = response.json()['Id']
 
     def tearDown(self):
@@ -33,6 +33,7 @@ class DockerAPITestCase(TestCase):
 
         endpoint = 'containers/{}'.format(self.container_id)
         response = self.request('delete', endpoint)
+        self.assertEqual(response.status_code, 204)
 
     def request(self, action, endpoint, data=None):
         """Wraps Docker HTTP requests"""
