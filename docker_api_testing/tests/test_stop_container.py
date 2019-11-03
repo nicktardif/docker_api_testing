@@ -3,6 +3,7 @@ from requests.exceptions import ConnectionError
 
 from docker_api_testing.tests.docker_api_test_case import DockerAPITestCase
 from docker_api_testing import config
+from docker_api_testing.utilities import get_nonexistent_container_id
 
 class StopContainerTest(DockerAPITestCase):
     @patch('docker_api_testing.config.docker_socket', config.fake_socket)
@@ -25,4 +26,8 @@ class StopContainerTest(DockerAPITestCase):
         response = self.request('post', endpoint)
         self.assertEquals(response.status_code, 304)
 
-    # TODO: Attempt to stop a nonexistent container
+    def test_stop_nonexistent_container(self):
+        container_id = get_nonexistent_container_id()
+        endpoint = 'containers/{}/stop'.format(container_id)
+        response = self.request('post', endpoint)
+        self.assertEqual(response.status_code, 404)
