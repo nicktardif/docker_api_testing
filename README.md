@@ -29,3 +29,7 @@ pipenv install
 # Run the API tests
 pipenv run python run_tests.py
 ```
+
+These tests assume that the Docker daemon is running on your system and is available via a Unix socket at `/var/run/docker.sock`. If this is not the case, the tests will fail.
+
+In specific tests we simulate the Docker daemon being down by setting the query Unix socket to `/var/run/docker2.sock`, and these check for the expected connection errors.
