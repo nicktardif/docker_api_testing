@@ -34,6 +34,6 @@ Additional tests that we could add in the future:
 * Set different tail values and check how many logs are returned. Possible
   values, [-1, 0, 1, 2, 10, 1000]
 * Dynamically trigger logs during the test. This could be possible with an
-  Nginx container (as a suggestion). With this, we'd be able to test the
-  "since" and "until" keywords very easily
+  Nginx container and sending HTTP requests into that conatiner. With this,
+  we'd be able to test the "since" and "until" parameters very easily
 '''
